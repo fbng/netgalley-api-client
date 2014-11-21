@@ -1,9 +1,9 @@
 {
-  "name": "netgalley/netgalley-api-client",
+  "name": "fbng/netgalley-api-client",
   "description": "NetGalley Public API Client",
   "homepage": "https://github.com/fbng/netgalley-api-client",
   "license": "MIT",
-  "keywords": ["NetGalley", "netgalley", "api", "client"],
+  "keywords": ["NetGalley", "netgalley", "firebrand", "fbng", "api", "client"],
   "require": {
     "php": ">=5.4",
     "lib-curl": ">=7.0"
