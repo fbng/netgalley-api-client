@@ -64,4 +64,4 @@ That's it!
 
 # API Documentation
 
-See the [API Documentation](https://github.com/fbng/netgalley-api-client/blob/master/documentation/index.html) within this repository for up-to-date information on each REST API.
+See the [API Documentation](http://htmlpreview.github.com/?https://github.com/fbng/netgalley-api-client/blob/master/documentation/index.html) within this repository for up-to-date information on each REST API.
