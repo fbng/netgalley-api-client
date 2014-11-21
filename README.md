@@ -1,5 +1,7 @@
-NetGalley Public API Client
-===========================
+NetGalley Public REST API Client
+================================
+
+The NetGalley Public REST API provides a way for NetGalley's partners to interact with the system. The library currently supports only PHP, but the API itself can of course be accessed via REST by any system. 
 
 # Installation
 
@@ -59,3 +61,7 @@ echo 'Response was: ' . print_r($response, true) . PHP_EOL;
 ```
 
 That's it!
+
+# API Documentation
+
+See the [API Documentation](https://github.com/fbng/netgalley-api-client/blob/master/documentation/index.html) within this repository for up-to-date information on each REST API.
