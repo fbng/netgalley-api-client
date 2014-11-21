@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
+<html>
+    <head>
+        <meta charset="utf-8" />
         <!-- Always force latest IE rendering engine (even in intranet) and Chrome Frame -->
-        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
         <title>API documentation</title>
         <style type="text/css">
             @font-face{font-family:'Droid Sans';font-style:normal;font-weight:400;src:local('Droid Sans'),local('DroidSans'),url(//themes.googleusercontent.com/static/fonts/droidsans/v3/s-BiyweUPV0v-yRb-cjciL3hpw3pgy2gAi-Ip7WPMi0.woff) format('woff')}@font-face{font-family:'Droid Sans';font-style:normal;font-weight:700;src:local('Droid Sans Bold'),local('DroidSans-Bold'),url(//themes.googleusercontent.com/static/fonts/droidsans/v3/EFpQQyG9GqCrobXxL-KRMXbFhgvWbfSbdVg11QabG8w.woff) format('woff')}.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
@@ -636,7 +636,7 @@ form .request-content {
                     </ul>
     </div>
 
-    <div class="content" style="">
+    <div class="content">
         <ul class="tabs">
             <li class="selected" data-pane="content">Documentation</li>
                     </ul>
@@ -649,7 +649,7 @@ form .request-content {
 
 
                             <h4>Parameters</h4>
-                <table class="fullwidth">
+                <table class='fullwidth'>
                     <thead>
                         <tr>
                             <th>Parameter</th>
@@ -678,7 +678,7 @@ form .request-content {
                                     <td>market</td>
                                     <td>text</td>
                                     <td>false</td>
-                                    <td>(AU|CA|EU|UK|US)</td>
+                                    <td>(AU|CA|FR|UK|US)</td>
                                     <td>Book's primary market, default is 'US'.  Used only to search for the Title's record in NetGalley.</td>
                                 </tr>
                                                                                                                 <tr>
@@ -735,9 +735,7 @@ form .request-content {
                             <td><a href="http://en.wikipedia.org/wiki/HTTP_401" target="_blank">401</a></td>
                             <td>
                                 <ul>
-                                                                            <li>Either
- the title is not made public or has been archived. Response will return
- a code of either 'title_not_public' or 'title_archived'.</li>
+                                                                            <li>The title is not owned by the requesting account, is not ready, or has been archived. Response will return a code of 'title_not_authorized', 'title_not_ready', or 'title_archived'.</li>
                                                                     </ul>
                             </td>
                         </tr>
@@ -745,10 +743,7 @@ form .request-content {
                             <td><a href="http://en.wikipedia.org/wiki/HTTP_422" target="_blank">422</a></td>
                             <td>
                                 <ul>
-                                                                            <li>Other
- validation errors occurred, most likely due to a missing or invalid
-email address. Response will return a code of 'missing_email',
-'invalid_email', or a general 'validation_error'.</li>
+                                                                            <li>Other validation errors occurred, most likely due to a missing or invalid email address. Response will return a code of 'missing_email', 'invalid_email', or a general 'validation_error'.</li>
                                                                     </ul>
                             </td>
                         </tr>
@@ -776,7 +771,7 @@ email address. Response will return a code of 'missing_email',
                                 </ul>
         </div>
         <p id="colophon">
-            Documentation auto-generated on Fri, 14 Nov 14 08:58:08 -0800
+            Documentation auto-generated on Fri, 21 Nov 14 11:33:17 -0600
         </p>
         <script type="text/javascript">
 
@@ -828,8 +823,7 @@ email address. Response will return a code of 'missing_email',
                 return false;
             });
 
-                    </script>
+                                    </script>
 
-
-
-</body></html>
+</body>
+</html>
