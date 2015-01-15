@@ -618,6 +618,67 @@ form .request-content {
                 <ul class="endpoints">
                     <li class="endpoint">
                         <ul class="operations">
+                                                            <li class="get operation" id="get--status">
+    <div class="heading toggler" data-href="#get--status">
+        <h3>
+            <span class="http_method">
+                <i>GET</i>
+            </span>
+
+
+
+            <span class="path">
+                http://api.netgalley.com/status
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>Get the status of the NetGalley API</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+            <li class="selected" data-pane="content">Documentation</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>Check the status of the NetGalley API.</p>
+</div>
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>API is available.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_418" target="_blank">418</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>API is temporarily unavailable, most likely due to the site being in maintenance mode.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+
+
+            </div>
+                    </div>
+    </div>
+</li>
                                                             <li class="post operation" id="post--widgets">
     <div class="heading toggler" data-href="#post--widgets">
         <h3>
@@ -636,7 +697,7 @@ form .request-content {
                     </ul>
     </div>
 
-    <div class="content">
+    <div class="content" style="display: none;">
         <ul class="tabs">
             <li class="selected" data-pane="content">Documentation</li>
                     </ul>
@@ -771,7 +832,7 @@ form .request-content {
                                 </ul>
         </div>
         <p id="colophon">
-            Documentation auto-generated on Fri, 21 Nov 14 11:33:17 -0600
+            Documentation auto-generated on Wed, 14 Jan 15 17:34:08 -0600
         </p>
         <script type="text/javascript">
 
