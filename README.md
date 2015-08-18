@@ -1,7 +1,7 @@
 NetGalley Public REST API Client
 ================================
 
-The NetGalley Public REST API provides a way for NetGalley's partners to interact with the system. The library currently supports only PHP, but the API itself can of course be accessed via REST by any system. 
+The NetGalley Public REST API provides a way for NetGalley's partners to interact with the system. The library currently supports only PHP, but the API itself can of course be accessed via REST by any system.
 
 # Installation
 
@@ -23,9 +23,19 @@ To install without Composer, download the latest archive, extract it to your pro
 require_once('/path/to/lib/NetGalley/API/Client.php');
 ```
 
+If you are connecting to the NetGalley API using OAuth2 (more about this below), also add the `require_once` line:
+
+```php
+require_once('/path/to/lib/NetGalley/API/OauthClient.php');
+```
+
 # Usage
 
-To use the client library, first obtain a set of API credentials from NetGalley (contact your concierge representative if you have any questions). Once you have credentials, use this example code as a basis for accessing the API:
+To use the client library, first obtain a set of API credentials from NetGalley (contact your concierge representative if you have any questions).  These credentials will either be a Key / Secret pair or an OAuth Client ID / Secret pair, which will determine which method below you will use to access the NetGalley API.
+
+## Key / Secret connection method
+
+If you have received Key / Secret credentials, use this example code as a basis for accessing the API:
 
 ```php
 use NetGalley\API\Client;
@@ -58,6 +68,35 @@ $response = json_decode($response, true);
 
 // do something with the response
 echo 'Response was: ' . print_r($response, true) . PHP_EOL;
+```
+
+## OAuth2 Client ID / Secret connection method
+
+If you have received OAuth2 credentials, use this example code as a basis for accessing the API:
+
+```php
+use NetGalley\API\OauthClient;
+
+// obtain your credentials from NetGalley
+$clientId = 'CLIENTID';
+$clientSecret = 'SECRET';
+
+// if requesting a token to grant third-party access, set the authorization
+// code captured by the redirect URI
+//
+// NOTE: the NetGalley API does not currently support authorizing third-party
+// access - this is included only to avoid conflicts in client implementations
+// in the future if it ever becomes a supported feature
+$authorizationCode = '';
+
+// if set to true, the client will target a staging server
+$testMode = true;
+
+// instantiate the client using your credentials
+$client = new OauthClient($clientId, $clientSecret, $authorizationCode, $testMode);
+
+// make requests and handle responses the same as above
+$response = null;
 ```
 
 That's it!

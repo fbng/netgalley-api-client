@@ -13,39 +13,39 @@ namespace NetGalley\API;
 class Client
 {
     /**
-     * @const string
+     * @var string
      */
     const NETGALLEY_LIVE_DOMAIN = 'https://api.netgalley.com';
 
     /**
-     * @const string
+     * @var string
      */
     const NETGALLEY_TEST_DOMAIN = 'https://api.stage02.netgalley.com';
 
     /**
      * @var string
      */
-    private $apiKey;
+    protected $apiKey;
 
     /**
      * @var string
      */
-    private $apiSecret;
+    protected $apiSecret;
 
     /**
      * @var string
      */
-    private $apiUser;
+    protected $apiUser;
 
     /**
      * @var array
      */
-    private $hashData;
+    protected $hashData;
 
     /**
      * @var bool
      */
-    private $isTest = false;
+    protected $isTest = false;
 
     /**
      * Construct an instance of the API client.
@@ -64,13 +64,68 @@ class Client
     }
 
     /**
+     * Get the Authorization header.
+     *
+     * @param string $path The API path to request from.
+     * @param string $method The request method.
+     * @param array $data The data to submit.
+     *
+     * @return string
+     */
+    protected function getAuthorizationHeader($path, $method = 'GET', $data = array())
+    {
+        // compile the hash data
+        $hashData = is_array($data) ? $data : array();
+
+        $hashData = array_merge($hashData, array(
+            'apikey' => $this->apiKey,
+            'method' => $method,
+            'url' => $this->getRequestUrl($path),
+        ));
+
+        ksort($hashData);
+
+        return 'Authorization: user=' . $this->apiUser . ',apikey=' . $this->apiKey
+            . ',hash=' . hash_hmac('sha256', json_encode($hashData), $this->apiSecret);
+    }
+
+    /**
      * Get the host to interact with.
      *
      * @return string
      */
-    private function getHost()
+    protected function getHost()
     {
         return $this->isTest ? self::NETGALLEY_TEST_DOMAIN : self::NETGALLEY_LIVE_DOMAIN;
+    }
+
+    /**
+     * Get the request URL.
+     *
+     * @param string $path The API path to request from.
+     * @param string $method The request method.
+     * @param array $data The data to submit.
+     *
+     * @return string
+     */
+    protected function getRequestUrl($path, $method = 'GET', $data = array())
+    {
+        $query = '';
+        if ($method === 'GET' && $data) {
+            $query = '?' . http_build_query($data);
+        }
+
+        return $this->getHost() . '/' . trim($path, '/') . $query;
+    }
+
+    /**
+     * Get an array of reserved data keys.
+     *
+     * @return array
+     */
+    protected function getReservedKeys()
+    {
+        return array('apikey', 'method', 'url');
     }
 
     /**
@@ -86,37 +141,17 @@ class Client
     {
         $curl = curl_init();
 
-        $path = '/' . trim($path, '/');
-
         $data = (!is_array($data) ? (array)$data : $data);
 
+        $reservedKeys = $this->getReservedKeys();
         foreach ($data as $key => $value) {
-            if (in_array($key, array('apikey', 'method', 'url'))) {
-                throw new \UnexpectedValueException('Data uses a reserved key: ' . $key . '".');
+            if (in_array($key, $reservedKeys)) {
+                throw new \UnexpectedValueException('Data uses a reserved key: "' . $key . '".');
             }
         }
 
-        // compile the hash data
-        $hashData = is_array($data) ? $data : array();
-
-        $hashData = array_merge($hashData, array(
-            'apikey' => $this->apiKey,
-            'method' => $method,
-            'url' => $this->getHost() . $path,
-        ));
-
-        ksort($hashData);
-
-        $requestData = array(
-            'user=' . $this->apiUser,
-            'apikey=' . $this->apiKey,
-            'hash=' . hash_hmac('sha256', json_encode($hashData), $this->apiSecret)
-        );
-
         // set the request
-        $request = $this->getHost() . $path . '?' . implode('&', $requestData);
-
-        curl_setopt($curl, CURLOPT_URL, $request);
+        curl_setopt($curl, CURLOPT_URL, $this->getRequestUrl($path, $method, $data));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         if ($this->isTest) {
@@ -124,20 +159,34 @@ class Client
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
 
+        $headers = array();
+
         // set the method of the request and process any data
         if ($method !== 'GET') {
 
             if (is_array($data) && $data) {
 
-                $data = json_encode($data);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data))
-                );
+                $jsonData = json_encode($data);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+                $headers[] = 'Content-Type: application/json';
+                $headers[] = 'Content-Length: ' . strlen($jsonData);
+            }
+            else {
+                $headers[] = 'Content-Type: application/x-www-form-urlencoded';
             }
 
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        }
+        else {
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        }
+
+        // set the headers
+        if ($authorizationHeader = $this->getAuthorizationHeader($path, $method, $data)) {
+            $headers[] = $authorizationHeader;
+        }
+        if ($headers) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
 
         // execute the request
