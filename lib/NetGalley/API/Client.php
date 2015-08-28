@@ -48,6 +48,11 @@ class Client
     protected $isTest = false;
 
     /**
+     * @var string
+     */
+    protected $testDomain;
+
+    /**
      * Construct an instance of the API client.
      *
      * @param string $apiUser The login username at netgalley.com for the account that has API credentials.
@@ -96,7 +101,10 @@ class Client
      */
     protected function getHost()
     {
-        return $this->isTest ? self::NETGALLEY_TEST_DOMAIN : self::NETGALLEY_LIVE_DOMAIN;
+        return $this->isTest
+            ? (empty($this->testDomain) ? self::NETGALLEY_TEST_DOMAIN : $this->testDomain)
+            : self::NETGALLEY_LIVE_DOMAIN
+        ;
     }
 
     /**
@@ -199,5 +207,15 @@ class Client
         curl_close($curl);
 
         return $returnData;
+    }
+
+    /**
+     * Override the default test domain for making sandbox API requests.
+     *
+     * @param string $domain The domain to request.
+     */
+    public function setTestDomain($domain)
+    {
+        $this->testDomain = $domain;
     }
 }
