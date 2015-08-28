@@ -154,4 +154,17 @@ class OauthClient extends Client
         $this->refreshToken = empty($token->refresh_token) ? '' : $token->refresh_token;
         $this->tokenExpires = empty($token->expires_in) ? time() : time() + $token->expires_in;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTestDomain($domain)
+    {
+        $this->testDomain = $domain;
+
+        // request a new token from the updated domain if in test mode
+        if ($this->isTest) {
+            $this->requestToken();
+        }
+    }
 }
