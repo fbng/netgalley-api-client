@@ -160,7 +160,7 @@ class OauthClient extends Client
      */
     public function setTestDomain($domain)
     {
-        $this->testDomain = $domain;
+        parent::setTestDomain($domain);
 
         // request a new token from the updated domain if in test mode
         if ($this->isTest) {

@@ -216,6 +216,10 @@ class Client
      */
     public function setTestDomain($domain)
     {
+        if (!preg_match('/^https*:\/\//i', $domain)) {
+            $domain = 'https://' . $domain;
+        }
+
         $this->testDomain = $domain;
     }
 }
