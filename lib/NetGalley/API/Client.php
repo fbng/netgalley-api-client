@@ -137,17 +137,39 @@ class Client
     }
 
     /**
-     * Make a request to the remote API endpoint via cURL.
+     * Wrapper for the request method to return the result as a temporary file
+     * handle resource.
+     *
+     * @param string $path The path to request from.
+     * @param string $method The request method.
+     * @param array $data The toggle data to submit.
+     *
+     * @return resource
+     */
+    public function makeFileRequest($path, $method = "GET", $data = null)
+    {
+        return $this->makeRequest($path, $method, $data, true);
+    }
+
+    /**
+     * Make a request to the remote API endpoint via cURL.  If asFile is set to
+     * true, the requested data is dumped into a temporary file, and the file
+     * handle is returned.  Otherwise, the data is returned as a JSON encoded
+     * string.
      *
      * @param string $path The API path to request from.
      * @param string $method The request method.
      * @param array $data The data to submit.
+     * @param boolean $asFile Set to true to dump the data in a temporary file.
      *
-     * @return string
+     * @return string|resource
      */
-    public function makeRequest($path, $method = 'GET', $data = array())
+    public function makeRequest($path, $method = 'GET', $data = array(), $asFile = false)
     {
         $curl = curl_init();
+        if ($asFile) {
+            $tempFile = tmpfile();
+        }
 
         $data = (!is_array($data) ? (array)$data : $data);
 
@@ -197,14 +219,28 @@ class Client
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
 
+        // if dumping to a temp file, set the write function
+        if ($asFile) {
+            curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($curl, $streamData) use (&$tempFile) {
+                $length = fwrite($tempFile, $streamData);
+                return $length;
+            });
+        }
+
         // execute the request
         $returnData = curl_exec($curl);
 
-        if (!$returnData) {
+        if (!$asFile && !$returnData) {
             $returnData = json_encode(array('http_code' => curl_getinfo($curl, CURLINFO_HTTP_CODE)));
         }
 
         curl_close($curl);
+
+        // if dumping to a temp file, return the file handle
+        if ($asFile) {
+            fseek($tempFile, 0);
+            return $tempFile;
+        }
 
         return $returnData;
     }

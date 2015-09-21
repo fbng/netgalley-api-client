@@ -54,7 +54,7 @@ $client = new Client($myUser, $myApiKey, $myApiSecret, $testMode);
 // make an API request; see the relevant documentation
 // for details of the API you are requesting; here we
 // are creating a new widget for a customer
-$response = $client->makeRequest('/widgets', 'POST', array(
+$response = $client->makeRequest('/private/widgets', 'POST', array(
     'email' => 'customer@gmail.com',
     'isbn' => '1234567890123',
     'market' => 'US',
@@ -99,7 +99,22 @@ $client = new OauthClient($clientId, $clientSecret, $authorizationCode, $testMod
 $response = null;
 ```
 
-That's it!
+## Handling Large Data Results
+
+If you are granted access to any reporting APIs, you may foresee instances in your application where large data sets may be coming from the API.  You can avoid loading the entire data set into memory by streaming the results directly into a temporary file.
+
+In the example below, `$responseFile` is a file handle resource to a temporary file containing the response data from the API request.  You can then write the file contents to the output buffer to provide a CSV download, for example, or rename the file to a permanent location.
+
+```php
+$responseFile = $client->makeFileRequest('/private/reports/example_report', 'GET', array('filter' => 'example'));
+
+if ($responseFile !== false) {
+
+    // Do something with $responseFile
+
+    fclose($responseFile);
+}
+```
 
 # API Documentation
 
