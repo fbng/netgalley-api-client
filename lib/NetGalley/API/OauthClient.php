@@ -50,9 +50,6 @@ class OauthClient extends Client
         parent::__construct(null, $clientId, $clientSecret, $isTest);
 
         $this->authorizationCode = $authorizationCode;
-
-        // make an initial request to get the OAuth token
-        $this->requestToken();
     }
 
     /**
@@ -62,6 +59,13 @@ class OauthClient extends Client
     {
         // authorization header is only needed if a token is being requested or refreshed
         if ($path !== self::NETGALLEY_TOKEN_PATH) {
+
+            // if the client hasn't requested an access token, or the request
+            // failed, don't attempt to provide an authorization header
+            if (!$this->clientToken) {
+                return '';
+            }
+
             return 'Authorization: Bearer ' . $this->clientToken;
         }
 
@@ -153,18 +157,5 @@ class OauthClient extends Client
         $this->clientToken = empty($token->access_token) ? '' : $token->access_token;
         $this->refreshToken = empty($token->refresh_token) ? '' : $token->refresh_token;
         $this->tokenExpires = empty($token->expires_in) ? time() : time() + $token->expires_in;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTestDomain($domain)
-    {
-        parent::setTestDomain($domain);
-
-        // request a new token from the updated domain if in test mode
-        if ($this->isTest) {
-            $this->requestToken();
-        }
     }
 }

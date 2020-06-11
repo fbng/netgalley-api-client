@@ -95,6 +95,9 @@ $testMode = true;
 // instantiate the client using your credentials
 $client = new OauthClient($clientId, $clientSecret, $authorizationCode, $testMode);
 
+// request an access token once (will be set internally for subsequent requests)
+$client->requestToken();
+
 // make requests and handle responses the same as above
 $response = null;
 ```
